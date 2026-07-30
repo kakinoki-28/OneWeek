@@ -10,14 +10,15 @@ public class PullWeaponMotion : MonoBehaviour
     [SerializeField]
     [Min(0f)]
     private float tremblingWidth = 0.3f;
-    [SerializeField]
-    [Min(0f)]
-    private float maxMoveDistance = 1.0f;
+    // [SerializeField]
+    // [Min(0f)]
+    // private float maxMoveDistance = 1.0f;
     [SerializeField]
     [Min(0.1f)]
     private float tremblingFrequency = 5f;
-    private Vector2 currentRandomPoint;
+    // private Vector2 currentRandomPoint;
     private float nextTremblingTime;
+    private bool isTremblingUp = false;
     private MousePullTest pullInput;
     private Vector3 originalPosition;
 
@@ -41,17 +42,21 @@ public class PullWeaponMotion : MonoBehaviour
             return;
         }
         float pullRate = pullInput.VisualPullRate;
-        Vector3 pullOffset = Vector3.right * maxMoveDistance * pullRate;
+        // Vector3 pullOffset = Vector3.right * maxMoveDistance * pullRate;
         // 震えの追加
         if (Time.time >= nextTremblingTime)
         {
-            currentRandomPoint = Random.insideUnitCircle;
-
+            isTremblingUp = !isTremblingUp;
             nextTremblingTime = Time.time + 1f / tremblingFrequency;
         }
 
-        Vector3 tremblingOffset = new Vector3(0f, currentRandomPoint.y, 0f) * tremblingWidth * pullRate;
+        float tremblingY;
+        if (isTremblingUp) { tremblingY = 1f; }
+        else { tremblingY = -1f; }
 
-        transform.localPosition = originalPosition + pullOffset + tremblingOffset;
+        Vector3 tremblingOffset = new Vector3(0f, tremblingY, 0f) * tremblingWidth * pullRate;
+
+        // transform.localPosition = originalPosition + pullOffset + tremblingOffset;
+        transform.localPosition = originalPosition + tremblingOffset;
     }
 }
