@@ -11,6 +11,7 @@ public class PendulumPullController : MonoBehaviour
     [SerializeField] private float maxMoveDistance = 2.0f;
     // private Quaternion originalRotation;
     private Vector3 originalPosition;
+    private Quaternion originalRotation;
     // [SerializeField][Min(0f)] private float tremblingWidth = 0.3f;
     // [SerializeField][Min(0.1f)] private float tremblingFrequency = 5f;
     private float nextTremblingTime;
@@ -109,5 +110,20 @@ public class PendulumPullController : MonoBehaviour
         // transform.position = originalPosition + pullOffset;
         transform.localPosition = originalPosition + pullOffset;
         // transform.position = originalPosition + pullOffset + tremblingOffset;
+    }
+
+    public void ResetPendulum()
+    {
+        // 速度を変更できる状態にする
+        pendulumBody.isKinematic = false;
+        // 振り子の移動と回転を停止
+        pendulumBody.linearVelocity = Vector3.zero;
+        pendulumBody.angularVelocity = Vector3.zero;
+        // 初期位置と初期角度へ戻す
+        transform.localPosition = originalPosition;
+        transform.localRotation = originalRotation;
+        // 次のドラッグまで物理演算を止める
+        pendulumBody.isKinematic = true;
+        wasDragging = false;
     }
 }

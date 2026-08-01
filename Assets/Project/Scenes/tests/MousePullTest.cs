@@ -101,7 +101,7 @@ public class MousePullTest : MonoBehaviour
             $"上限超過: {isOverMaxPull}, "
         );
     }
-    
+
     private void EndDrag(Vector2 position)
     {
         // 離した瞬間の位置でもう一度計算
@@ -120,5 +120,17 @@ public class MousePullTest : MonoBehaviour
         }
         if (!isOverMaxPull && power > 0f) { hasReleasedWeapon = true; }
         isDragging = false;
+    }
+    
+    public void ResetPullState()
+    {
+        isDragging = false;
+        hasReleasedWeapon = false;
+        pressPosition = Vector2.zero;
+        currentPosition = Vector2.zero;
+        pullDistance = 0f;
+        power = 0f;
+        isOverMaxPull = false;
+        visualPullRate = 0f;
     }
 }
