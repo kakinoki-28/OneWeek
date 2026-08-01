@@ -7,10 +7,12 @@ public class CollisionScript : MonoBehaviour
     [SerializeField] private BatteringRamResetController resetController;
     [SerializeField] private float MaxDamage = 30.0f;
     [SerializeField] private float thresholdTime = 2.0f;
+    [SerializeField] private float waitCollideThreshold = 5.0f;
     private Dictionary<GameObject, float> lastCollisionTimes = new Dictionary<GameObject, float>();
 
     private Rigidbody rb;
     private bool Collided = false;
+    private float afterReleaseTime = 0f;
 
     void Awake()
     {
@@ -62,8 +64,15 @@ public class CollisionScript : MonoBehaviour
 
     void Update()
     {
-        if (pullInput.HasReleasedWeapon && Collided)
+        // 武器が発射された後、一定時間衝突がなければリセットする
+        if (pullInput.HasReleasedWeapon)
         {
+            if (afterReleaseTime == 0f)
+            {
+              afterReleaseTime = Time.time;
+              Debug.Log($"afterReleaseTime set to {afterReleaseTime}");  
+            } 
+            if(!Collided && Time.time - afterReleaseTime < waitCollideThreshold) return;
             foreach (var collideObject in lastCollisionTimes.Keys)
             {
                 if(Time.time - lastCollisionTimes[collideObject] > thresholdTime)
@@ -79,6 +88,7 @@ public class CollisionScript : MonoBehaviour
         }else
         {
             Collided = false;
+            afterReleaseTime = 0f;
         }
     }
 }
