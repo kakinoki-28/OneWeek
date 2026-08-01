@@ -23,10 +23,24 @@ public class MousePullTest : MonoBehaviour
 
     [SerializeField] private LayerMask laneArrowLayer;
 
+    private AttackCountController attackCountController;
+
+    private void Awake()
+    {
+        attackCountController = GetComponent<AttackCountController>();
+        if (attackCountController == null)
+        {
+            Debug.LogError("AttackCountControllerが見つかりません");
+            enabled = false;
+            return;
+        }
+    }
+
     private void Update()
     {
         // 発射後はリセットされるまで入力を受け付けない
-        if (hasReleasedWeapon) { return; }
+        // 攻撃回数が残っていない時も入力を受け付けない
+        if (hasReleasedWeapon || !attackCountController.CanAttack) { return; }
         Mouse mouse = Mouse.current;
         if (mouse == null) { return; }
         if (mouse.leftButton.wasPressedThisFrame)
@@ -117,7 +131,18 @@ public class MousePullTest : MonoBehaviour
         {
             Debug.Log($"ドラッグ終了位置：{position}, パワー: {power:P0}");
         }
-        if (!isOverMaxPull && power > 0f) { hasReleasedWeapon = true; }
+        if (!isOverMaxPull && power > 0f)
+        {
+            if (attackCountController.Attack())
+            {
+                hasReleasedWeapon = true;
+            }
+            else
+            {
+                // 念のため振り子が発射されないようにする
+                power = 0f;
+            }
+        }
         isDragging = false;
     }
     
