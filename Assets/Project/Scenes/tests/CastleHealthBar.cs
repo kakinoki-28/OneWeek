@@ -4,9 +4,11 @@ using UnityEngine.UI;
 public class CastleHealthBar : MonoBehaviour
 {
     [SerializeField] private Transform castleRoot;
+    [SerializeField] private CastleDamageBar damageBar;
     private Slider healthSlider;
     private PrefabSwitcherScript[] castleParts;
     private float totalMaxHealth;
+    private float previousHealthRate;
 
     private void Awake()
     {
@@ -26,6 +28,13 @@ public class CastleHealthBar : MonoBehaviour
         }
 
         SetCastle(castleRoot);
+
+        if (damageBar == null)
+        {
+            Debug.LogError("CastleDamageBarが設定されていません");
+            enabled = false;
+            return;
+        }
     }
 
     public void SetCastle(Transform newCastleRoot)
@@ -37,6 +46,7 @@ public class CastleHealthBar : MonoBehaviour
         {
             totalMaxHealth += castlePart.maxHealth;
         }
+        previousHealthRate = totalMaxHealth;
     }
 
     private void Update()
@@ -47,5 +57,12 @@ public class CastleHealthBar : MonoBehaviour
             totalCurrentHealth += castlePart.currentHealth;
         }
         healthSlider.value = totalCurrentHealth / totalMaxHealth;
+
+        // 体力が変化した場合にダメージバーの動きを開始
+        if (previousHealthRate != healthSlider.value)
+        {
+            damageBar.PlayDamageBarAnimation(healthSlider.value);
+            previousHealthRate = healthSlider.value;
+        }
     }
 }
