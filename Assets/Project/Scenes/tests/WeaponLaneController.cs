@@ -15,6 +15,8 @@ public class WeaponLaneController : MonoBehaviour
 
     public int CurrentLane => currentLane;
 
+    private PlaySEPlayer SEPlayer;
+
     private void Awake()
     {
         centerZ = transform.position.z;
@@ -26,11 +28,19 @@ public class WeaponLaneController : MonoBehaviour
         pullInput = GetComponentInParent<MousePullTest>();
         if (pullInput == null)
         {
-            Debug.LogError(
-                "MousePullTestが見つかりません"
-            );
+            Debug.LogError("MousePullTestが見つかりません");
             enabled = false;
             return;
+        }
+        if(SEPlayer == null)
+        {
+            SEPlayer = GetComponent<PlaySEPlayer>();
+            if(SEPlayer == null)
+            {
+                Debug.LogError("PlaySEPlayerが見つかりません");
+                enabled = false;
+                return;
+            }
         }
         UpdateArrowVisibility();
     }
@@ -48,6 +58,10 @@ public class WeaponLaneController : MonoBehaviour
     {
         int nextLane = Mathf.Clamp(currentLane + direction, -1, 1);
         if (nextLane == currentLane) { return; }
+
+        // SEの再生
+        SEPlayer.PlaySE();
+
         float nextZ = centerZ + nextLane * laneSpacing;
         float moveZ = nextZ - transform.position.z;
         Vector3 moveOffset = new Vector3(0f, 0f, moveZ);

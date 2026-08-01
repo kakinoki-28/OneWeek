@@ -17,6 +17,9 @@ public class PendulumPullController : MonoBehaviour
     private float nextTremblingTime;
     private Vector2 currentRandomPoint;
 
+    private PlaySEPlayer SEPlayer;
+    [SerializeField] private AudioClip flyingSEClip;
+
     private void Awake()
     {
         pendulumBody = GetComponent<Rigidbody>();
@@ -33,6 +36,13 @@ public class PendulumPullController : MonoBehaviour
         if (pullInput == null)
         {
             Debug.LogError("MousePullTestが見つかりません");
+            enabled = false;
+            return;
+        }
+        SEPlayer = GetComponent<PlaySEPlayer>();
+        if (SEPlayer == null)
+        {
+            Debug.LogError("PlaySEPlayerが見つかりません");
             enabled = false;
             return;
         }
@@ -71,6 +81,7 @@ public class PendulumPullController : MonoBehaviour
     private void BeginPull()
     {
         Debug.Log("引っ張り開始");
+        SEPlayer.PlaySE();
         pendulumBody.isKinematic = true;
         // 現在いるレーンのZ座標を保持
         originalPosition.z = transform.localPosition.z;
@@ -86,6 +97,9 @@ public class PendulumPullController : MonoBehaviour
             // transform.position = originalPosition;
             transform.localPosition = originalPosition;
             return;
+        }else if(power > 0.5f)
+        {
+            SEPlayer.PlaySE(flyingSEClip);
         }
         pendulumBody.isKinematic = false;
         pendulumBody.linearVelocity = new Vector3(-velocity0 * power, 0f, 0f);

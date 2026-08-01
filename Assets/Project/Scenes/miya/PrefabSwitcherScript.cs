@@ -17,8 +17,18 @@ public class PrefabSwitcherScript : MonoBehaviour
     private GameObject currentInstance;
     private int currentStageIndex = 0;
 
+    private PlaySEPlayer SEPlayer;
+
     void Start()
     {
+        SEPlayer = GetComponent<PlaySEPlayer>();
+        if (SEPlayer == null)
+        {
+            Debug.LogError("PlaySEPlayerが見つかりません");
+            enabled = false;
+            return;
+        }
+
         currentHealth = maxHealth;
         currentInstance = gameObject;
         stagesInit();
@@ -47,6 +57,8 @@ public class PrefabSwitcherScript : MonoBehaviour
     public void Damage(float damage)
     {
         if(currentHealth <= 0f) return;
+
+        SEPlayer.PlaySE();
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(currentHealth, 0f);
