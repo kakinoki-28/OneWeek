@@ -43,8 +43,8 @@ public class PendulumPullController : MonoBehaviour
         }
         // 紐の長さ
         pendulumLength = pivotAnchor.position.y - pendulumBody.position.y;
-        originalPosition = pendulumBody.position;
-        // originalRotation = transform.rotation;
+        // originalPosition = pendulumBody.position;
+        originalPosition = transform.localPosition;
     }
 
     private void LateUpdate()
@@ -70,6 +70,8 @@ public class PendulumPullController : MonoBehaviour
     {
         Debug.Log("引っ張り開始");
         pendulumBody.isKinematic = true;
+        // 現在いるレーンのZ座標を保持
+        originalPosition.z = transform.localPosition.z;
     }
 
     private void EndPull()
@@ -79,7 +81,8 @@ public class PendulumPullController : MonoBehaviour
         if (power <= 0f)
         {
             Debug.Log("ひっぱりキャンセル");
-            transform.position = originalPosition;
+            // transform.position = originalPosition;
+            transform.localPosition = originalPosition;
             return;
         }
         pendulumBody.isKinematic = false;
@@ -103,7 +106,8 @@ public class PendulumPullController : MonoBehaviour
         // }
 
         // Vector3 tremblingOffset = new Vector3(0f, currentRandomPoint.y, 0f) * tremblingWidth * pullRate;
-        transform.position = originalPosition + pullOffset;
+        // transform.position = originalPosition + pullOffset;
+        transform.localPosition = originalPosition + pullOffset;
         // transform.position = originalPosition + pullOffset + tremblingOffset;
     }
 }

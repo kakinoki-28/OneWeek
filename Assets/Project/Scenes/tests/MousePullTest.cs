@@ -14,10 +14,14 @@ public class MousePullTest : MonoBehaviour
     private bool isOverMaxPull;
     // 引っ張りの割合を上限を超えた場合でも扱うための変数
     private float visualPullRate;
+    private bool hasReleasedWeapon = false;
+    public bool HasReleasedWeapon => hasReleasedWeapon;
 
     public float Power => power;
     public bool IsDragging => isDragging;
     public float VisualPullRate => visualPullRate;
+
+    [SerializeField] private LayerMask laneArrowLayer;
 
     private void Update()
     {
@@ -28,6 +32,8 @@ public class MousePullTest : MonoBehaviour
         }
         if (mouse.leftButton.wasPressedThisFrame)
         {
+            Vector2 mousePosition = mouse.position.ReadValue();
+            if (TryClickLaneArrow(mousePosition)) { return; }
             BeginDrag(mouse.position.ReadValue());
         }
         if (isDragging && mouse.leftButton.isPressed)
@@ -39,6 +45,29 @@ public class MousePullTest : MonoBehaviour
             EndDrag(mouse.position.ReadValue());
         }
     }
+
+    private bool TryClickLaneArrow(Vector2 mousePosition)
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            Debug.LogError("Main Cameraが見つかりません");
+            return false;
+        }
+        Ray ray = mainCamera.ScreenPointToRay(mousePosition);
+        bool didHit = Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            Mathf.Infinity,
+            laneArrowLayer,
+            QueryTriggerInteraction.Collide
+        );
+        if (!didHit) { return false; }
+        LaneArrow laneArrow = hit.collider.GetComponentInParent<LaneArrow>();
+        if (laneArrow == null) { return false; }
+        laneArrow.Activate();
+        return true;
+}
 
     private void BeginDrag(Vector2 position)
     {
@@ -89,6 +118,7 @@ public class MousePullTest : MonoBehaviour
         {
             Debug.Log($"ドラッグ終了位置：{position}, パワー: {power:P0}");
         }
+        if (!isOverMaxPull && power > 0f) { hasReleasedWeapon = true; }
         isDragging = false;
     }
 }
