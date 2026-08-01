@@ -44,8 +44,8 @@ public class AttackCountUI : MonoBehaviour
         { return; }
 
         attackCountText.text =
-            $"ATTACK {remainingAttackCount} / " +
-            $"{attackCountController.MaxAttackCount}";
+            $"あと {remainingAttackCount} / " +
+            $"{attackCountController.MaxAttackCount} 回";
 
         previousAttackCount = remainingAttackCount;
         previousMaxAttackCount = attackCountController.MaxAttackCount;

@@ -34,8 +34,9 @@ public class CollisionScript : MonoBehaviour
             collisionParent.GetComponent<PrefabSwitcherScript>().Damage(MaxDamage*pullInput.Power);
             // 衝突相手のオブジェクト名を表示
             Debug.Log("ダメージ！: " + MaxDamage * pullInput.Power);
+            Debug.Log("linearVelocity: " + rb.linearVelocity);
 
-            rb.linearVelocity = new Vector3(10, 0, 0); // 衝突後に反発
+            rb.linearVelocity *= -0.8f; // 衝突後に反発
             lastCollisionTimes[collisionParent] = Time.time;
         }
     }
