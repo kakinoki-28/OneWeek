@@ -25,6 +25,8 @@ public class MousePullTest : MonoBehaviour
 
     private void Update()
     {
+        // 発射後はリセットされるまで入力を受け付けない
+        if (hasReleasedWeapon) { return; }
         Mouse mouse = Mouse.current;
         if (mouse == null)
         {
