@@ -28,10 +28,7 @@ public class MousePullTest : MonoBehaviour
         // 発射後はリセットされるまで入力を受け付けない
         if (hasReleasedWeapon) { return; }
         Mouse mouse = Mouse.current;
-        if (mouse == null)
-        {
-            return;
-        }
+        if (mouse == null) { return; }
         if (mouse.leftButton.wasPressedThisFrame)
         {
             Vector2 mousePosition = mouse.position.ReadValue();

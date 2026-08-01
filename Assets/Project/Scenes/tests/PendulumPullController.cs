@@ -46,6 +46,7 @@ public class PendulumPullController : MonoBehaviour
         pendulumLength = pivotAnchor.position.y - pendulumBody.position.y;
         // originalPosition = pendulumBody.position;
         originalPosition = transform.localPosition;
+        originalRotation = transform.localRotation;
     }
 
     private void LateUpdate()
