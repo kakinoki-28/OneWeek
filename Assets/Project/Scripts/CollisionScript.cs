@@ -5,6 +5,7 @@ public class CollisionScript : MonoBehaviour
 {
     [SerializeField] private MousePullTest pullInput;
     [SerializeField] private BatteringRamResetController resetController;
+    [SerializeField] private CameraShakeScript shakeScript;
     [SerializeField] private float MaxDamage = 30.0f;
     [SerializeField] private float thresholdTime = 2.0f;
     [SerializeField] private float waitCollideThreshold = 5.0f;
@@ -26,6 +27,12 @@ public class CollisionScript : MonoBehaviour
         if (resetController == null)
         {
             Debug.LogError("BatteringRamResetControllerが見つかりません");
+            enabled = false;
+            return;
+        }
+        if (shakeScript == null)
+        {
+            Debug.LogError("CameraShakeScriptが見つかりません");
             enabled = false;
             return;
         }
@@ -53,10 +60,8 @@ public class CollisionScript : MonoBehaviour
             collisionParent.GetComponent<PrefabSwitcherScript>().Damage(MaxDamage*pullInput.Power);
             // 衝突相手のオブジェクト名を表示
             Debug.Log("ダメージ！: " + MaxDamage * pullInput.Power);
-
-            Debug.Log("linearVelocity: " + rb.linearVelocity);
-            rb.linearVelocity *= -0.8f; // 衝突後に反発
-            Debug.Log("After linearVelocity: " + rb.linearVelocity);
+            Debug.Log("ヒットストップ: " + (0.05f+0.2f*pullInput.Power) + "秒" + "、カメラ揺れ量: " + (0.05f+0.3f*pullInput.Power) );
+            StartCoroutine(shakeScript.HitStopAndShake(0.05f+0.2f*pullInput.Power, 0.05f+0.3f*pullInput.Power));
 
             lastCollisionTimes[collisionParent] = Time.time;
         }
