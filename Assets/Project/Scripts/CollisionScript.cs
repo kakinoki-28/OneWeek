@@ -6,6 +6,7 @@ public class CollisionScript : MonoBehaviour
     [SerializeField] private MousePullTest pullInput;
     [SerializeField] private BatteringRamResetController resetController;
     [SerializeField] private CameraShakeScript shakeScript;
+    [SerializeField] private AttackResultController attackResultController;
     [SerializeField] private float MaxDamage = 30.0f;
     [SerializeField] private float thresholdTime = 2.0f;
     [SerializeField] private float waitCollideThreshold = 5.0f;
@@ -33,6 +34,12 @@ public class CollisionScript : MonoBehaviour
         if (shakeScript == null)
         {
             Debug.LogError("CameraShakeScriptが見つかりません");
+            enabled = false;
+            return;
+        }
+        if (attackResultController == null)
+        {
+            Debug.LogError("AttackResultControllerが見つかりません");
             enabled = false;
             return;
         }
@@ -88,6 +95,9 @@ public class CollisionScript : MonoBehaviour
             }
             if (lastCollisionTimes.Count == 0)
             {
+                // 今回の攻撃による被害額を保存
+                attackResultController.RecordAttackResult();
+                
                 resetController.ResetWeapon();
             }
         }else

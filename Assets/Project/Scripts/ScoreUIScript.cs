@@ -9,6 +9,9 @@ public class ScoreUIScript : MonoBehaviour
 
     private PrefabSwitcherScript[] castleParts;
 
+    private int currentScore;
+    public int CurrentScore => currentScore;
+
     private void Awake()
     {
         scoreText = GetComponent<TMP_Text>();
@@ -43,6 +46,7 @@ public class ScoreUIScript : MonoBehaviour
         {
             score += Mathf.CeilToInt(castlePart.CurrentAmountDamage);
         }
+        currentScore = score;
         // スコアが変化していなければ更新しない
         if (score == previousScore)
         { return; }
