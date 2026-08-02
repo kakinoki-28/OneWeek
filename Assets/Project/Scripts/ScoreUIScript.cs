@@ -24,10 +24,15 @@ public class ScoreUIScript : MonoBehaviour
             Debug.LogError("CastleRootが設定されていません");
             enabled = false;
             return;
-        }else
+        }
+        else
         {
             castleParts = castleRoot.GetComponentsInChildren<PrefabSwitcherScript>(true);
         }
+        scoreText.text =
+            $"<mark=#0000004F padding=\"20,20,0,0\">" +
+            $"被害総額 0 万円" +
+            $"</mark>";
     }
 
     // Update is called once per frame
