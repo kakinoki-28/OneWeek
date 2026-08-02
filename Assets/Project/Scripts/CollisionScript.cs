@@ -8,8 +8,8 @@ public class CollisionScript : MonoBehaviour
     [SerializeField] private CameraShakeScript shakeScript;
     [SerializeField] private AttackResultController attackResultController;
     [SerializeField] private float MaxDamage = 30.0f;
-    [SerializeField] private float thresholdTime = 2.0f;
-    [SerializeField] private float waitCollideThreshold = 5.0f;
+    [SerializeField] private float waitCollideTime = 2.0f;
+    [SerializeField] private float waitFirstCollide = 5.0f;
     private Dictionary<GameObject, float> lastCollisionTimes = new Dictionary<GameObject, float>();
 
     private Rigidbody rb;
@@ -61,7 +61,7 @@ public class CollisionScript : MonoBehaviour
             GameObject collisionParent = collision.gameObject.transform.parent.gameObject;
             if (lastCollisionTimes.TryGetValue(collisionParent, out float lastTime))
             {
-                if (Time.time - lastTime < thresholdTime) return; // 1秒以内は衝突判定を行わない
+                if (Time.time - lastTime < waitCollideTime) return; // 1秒以内は衝突判定を行わない
             }
 
             collisionParent.GetComponent<PrefabSwitcherScript>().Damage(MaxDamage*pullInput.Power);
@@ -82,15 +82,14 @@ public class CollisionScript : MonoBehaviour
             if (afterReleaseTime == 0f)
             {
               afterReleaseTime = Time.time;
-              Debug.Log($"afterReleaseTime set to {afterReleaseTime}");  
             } 
-            if(!Collided && Time.time - afterReleaseTime < waitCollideThreshold) return;
+            if(!Collided && Time.time - afterReleaseTime < waitFirstCollide) return;
             foreach (var collideObject in lastCollisionTimes.Keys)
             {
-                if(Time.time - lastCollisionTimes[collideObject] > thresholdTime)
+                if(Time.time - lastCollisionTimes[collideObject] > waitCollideTime)
                 {
                     lastCollisionTimes.Remove(collideObject);
-                    break; // Dictionaryのサイズが変わったのでループを抜ける
+                    break;
                 }
             }
             if (lastCollisionTimes.Count == 0)
@@ -99,6 +98,7 @@ public class CollisionScript : MonoBehaviour
                 attackResultController.RecordAttackResult();
                 
                 resetController.ResetWeapon();
+                Debug.Log("武器をリセットしました");
             }
         }else
         {

@@ -88,8 +88,10 @@ public class PrefabSwitcherScript : MonoBehaviour
         {
             currentStageIndex = targetStageIndex;
             SwitchObject();
-            currentAmountDamage = (1 - stages[currentStageIndex].thresholdRatio) * maxAmountDamage;
         }
+        // 被害額計算
+        currentAmountDamage = (1 - healthRatio) * maxAmountDamage;
+        Debug.Log($"healthRatio: {healthRatio}, この部位の被害額: {currentAmountDamage}万円");
     }
 
     private void SwitchObject()
