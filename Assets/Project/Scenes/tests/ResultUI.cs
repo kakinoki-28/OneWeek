@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using unityroom.Api;
 
 public class ResultUI : MonoBehaviour
 {
@@ -191,6 +192,7 @@ public class ResultUI : MonoBehaviour
             totalResultText,
             totalResultEndPosition
         );
+        UnityroomApiClient.Instance.SendScore(1, attackResultController.TotalScore, ScoreboardWriteMode.HighScoreDesc);
 
         newRecordText.SetActive(isNewRecord);
         retryButton.SetActive(true);
