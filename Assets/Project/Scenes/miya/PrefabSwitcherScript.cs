@@ -12,6 +12,10 @@ public class PrefabSwitcherScript : MonoBehaviour
     //private float currentHealth;
     public float currentHealth;
 
+    // 被害金額
+    [SerializeField] private float maxAmountDamage = 500f;
+    private float currentAmountDamage = 0f;
+    public float CurrentAmountDamage => currentAmountDamage;
 
     public DestructionStage[] stages;
     private GameObject currentInstance;
@@ -84,6 +88,7 @@ public class PrefabSwitcherScript : MonoBehaviour
         {
             currentStageIndex = targetStageIndex;
             SwitchObject();
+            currentAmountDamage = (1 - stages[currentStageIndex].thresholdRatio) * maxAmountDamage;
         }
     }
 
