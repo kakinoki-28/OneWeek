@@ -9,8 +9,13 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+<<<<<<< Updated upstream
     path: Assets/Project/Scenes/tests/Demoplay 1.unity
     guid: 839531b659e5f4162ab264511554fcd5
+=======
+    path: Assets/Project/Scenes/Demoplay.unity
+    guid: 0d762d3fe89757749aba31121831b8a4
+>>>>>>> Stashed changes
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d91a6e6c95f2c2a4ea50500fdf2f5eba, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
