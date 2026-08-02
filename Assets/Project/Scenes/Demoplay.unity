@@ -1950,6 +1950,7 @@ GameObject:
   - component: {fileID: 393285906}
   - component: {fileID: 393285905}
   - component: {fileID: 393285904}
+  - component: {fileID: 393285909}
   m_Layer: 5
   m_Name: ResultOverlay
   m_TagString: Untagged
@@ -2016,6 +2017,7 @@ MonoBehaviour:
   rowSlideDuration: 0.3
   rowInterval: 0.15
   slideStartOffsetX: 900
+  finalResultSE: {fileID: 8300000, guid: 79693bc617e3fa34eaf91c7330c8f1c5, type: 3}
 --- !u!225 &393285906
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2066,6 +2068,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 393285902}
   m_CullTransparentMesh: 1
+--- !u!114 &393285909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393285902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a253b0e308b62479d3b88b1992b68b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlaySEPlayer
+  seClip: {fileID: 8300000, guid: dd6bde0fa666db94ca984bd02321df76, type: 3}
 --- !u!1 &405112612
 GameObject:
   m_ObjectHideFlags: 0

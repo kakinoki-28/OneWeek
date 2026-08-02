@@ -20,6 +20,9 @@ public class ResultUI : MonoBehaviour
     private Vector2 totalResultEndPosition;
     private AttackResultController attackResultController;
 
+    private PlaySEPlayer SEPlayer;
+    [SerializeField] private AudioClip finalResultSE;
+
     private void Awake()
     {
         resultCanvasGroup = GetComponent<CanvasGroup>();
@@ -61,6 +64,20 @@ public class ResultUI : MonoBehaviour
         if (attackResultController == null)
         {
             Debug.LogError("AttackResultControllerが見つかりません");
+            enabled = false;
+            return;
+        }
+        // 効果音系の読み込み確認
+        SEPlayer = GetComponent<PlaySEPlayer>();
+        if (SEPlayer == null)
+        {
+            Debug.LogError("PlaySEPlayerが見つかりません");
+            enabled = false;
+            return;
+        }
+        if (finalResultSE == null)
+        {
+            Debug.LogError("FinalResultSEが設定されていません");
             enabled = false;
             return;
         }
@@ -129,6 +146,8 @@ public class ResultUI : MonoBehaviour
         // 1回目から順番に右から入れる
         for (int i = 0; i < attackResultRows.Length; i++)
         {
+            // 効果音の再生
+            SEPlayer.PlaySE();
             yield return SlideFromRight(
                 attackResultRows[i],
                 rowEndPositions[i]
@@ -143,6 +162,8 @@ public class ResultUI : MonoBehaviour
         totalResultText.gameObject.SetActive(true);
 
         // 最後にTOTALを右から入れる
+        // 効果音の再生
+        SEPlayer.PlaySE(finalResultSE);
         yield return SlideFromRight(
             totalResultText,
             totalResultEndPosition
