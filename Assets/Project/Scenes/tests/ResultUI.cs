@@ -24,6 +24,9 @@ public class ResultUI : MonoBehaviour
 
     private PlaySEPlayer SEPlayer;
     [SerializeField] private AudioClip finalResultSE;
+    [SerializeField] private GameObject newRecordText;
+    private static int highestScore = 0;
+    private bool isNewRecord;
 
     private void Awake()
     {
@@ -90,6 +93,14 @@ public class ResultUI : MonoBehaviour
             return;
         }
 
+        if (newRecordText == null)
+        {
+            Debug.LogError("NewRecordTextが設定されていません");
+            enabled = false;
+            return;
+        }
+        newRecordText.SetActive(false);
+
         HideResults();
     }
 
@@ -116,6 +127,9 @@ public class ResultUI : MonoBehaviour
     {
         resultCanvasGroup.alpha = 0f;
         resultCanvasGroup.blocksRaycasts = true;
+        totalResultText.gameObject.SetActive(false);
+        newRecordText.SetActive(false);
+        retryButton.SetActive(false);
 
         // 各行を画面右側へ移動
         for (int i = 0; i < attackResultRows.Length; i++)
@@ -178,6 +192,7 @@ public class ResultUI : MonoBehaviour
             totalResultEndPosition
         );
 
+        newRecordText.SetActive(isNewRecord);
         retryButton.SetActive(true);
     }
 
@@ -250,12 +265,15 @@ public class ResultUI : MonoBehaviour
                 totalText.text =
                     $"被害総額：{attackResultController.TotalScore / 10000}億"
                     + $"{attackResultController.TotalScore % 10000}万円";
-            } else
+            }
+            else
             {
                 totalText.text = $"被害総額：{attackResultController.TotalScore,5}万円";
             }
-            
         }
+        int totalScore = attackResultController.TotalScore;
+        isNewRecord = totalScore > highestScore;
+        if (isNewRecord) { highestScore = totalScore; }
     }
     
     public void RetryGame()
