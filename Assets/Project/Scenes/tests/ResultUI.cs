@@ -244,7 +244,17 @@ public class ResultUI : MonoBehaviour
         TMP_Text totalText = totalResultText.GetComponent<TMP_Text>();
         if (totalText != null)
         {
-            totalText.text = $"被害総額{attackResultController.TotalScore,5}万円";
+
+            if (attackResultController.TotalScore >= 10000)
+            {
+                totalText.text =
+                    $"被害総額：{attackResultController.TotalScore / 10000}億"
+                    + $"{attackResultController.TotalScore % 10000}万円";
+            } else
+            {
+                totalText.text = $"被害総額：{attackResultController.TotalScore,5}万円";
+            }
+            
         }
     }
     
