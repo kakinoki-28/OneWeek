@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ResultUI : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class ResultUI : MonoBehaviour
     [SerializeField] private float slideStartOffsetX = 900f;
     private Vector2 totalResultEndPosition;
     private AttackResultController attackResultController;
+    [SerializeField] private GameObject retryButton;
 
     private PlaySEPlayer SEPlayer;
     [SerializeField] private AudioClip finalResultSE;
@@ -81,6 +83,12 @@ public class ResultUI : MonoBehaviour
             enabled = false;
             return;
         }
+        if (retryButton == null)
+        {
+            Debug.LogError("RetryButtonが設定されていません");
+            enabled = false;
+            return;
+        }
 
         HideResults();
     }
@@ -124,6 +132,7 @@ public class ResultUI : MonoBehaviour
             Vector2.right * slideStartOffsetX;
 
         totalResultText.gameObject.SetActive(false);
+        retryButton.SetActive(false);
 
         // 黒背景とタイトルをフェードイン
         float elapsedTime = 0f;
@@ -168,6 +177,8 @@ public class ResultUI : MonoBehaviour
             totalResultText,
             totalResultEndPosition
         );
+
+        retryButton.SetActive(true);
     }
 
     private IEnumerator SlideFromRight(
@@ -225,9 +236,9 @@ public class ResultUI : MonoBehaviour
             // resultText.text = $"{i + 1}回目{damage,6}万円";
             string paddedDamage = damage.ToString().PadLeft(5);
             resultText.text =
-                $"{i + 1}回目"+
-                $"<pos=30%>"+
-                $"<mspace=0.6em>{paddedDamage}</mspace>"+
+                $"{i + 1}回目" +
+                $"<pos=30%>" +
+                $"<mspace=0.6em>{paddedDamage}</mspace>" +
                 $"万円";
         }
         TMP_Text totalText = totalResultText.GetComponent<TMP_Text>();
@@ -235,5 +246,15 @@ public class ResultUI : MonoBehaviour
         {
             totalText.text = $"被害総額{attackResultController.TotalScore,5}万円";
         }
+    }
+    
+    public void RetryGame()
+    {
+        // ヒットストップ中でも通常速度へ戻す
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
     }
 }
