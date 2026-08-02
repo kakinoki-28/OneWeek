@@ -29,4 +29,9 @@ public class AttackCountController : MonoBehaviour
     {
         remainingAttackCount = maxAttackCount;
     }
+
+    public void FinishGame()
+{
+    remainingAttackCount = 0;
+}
 }

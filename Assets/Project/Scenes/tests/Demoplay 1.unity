@@ -6040,6 +6040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackResultController
   scoreUI: {fileID: 437413733}
   attackCountController: {fileID: 62140971}
+  castleRoot: {fileID: 731858500}
 --- !u!1 &1905538795
 GameObject:
   m_ObjectHideFlags: 0

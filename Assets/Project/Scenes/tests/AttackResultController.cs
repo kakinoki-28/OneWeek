@@ -13,7 +13,10 @@ public class AttackResultController : MonoBehaviour
 
     public int RecordedAttackCount => recordedAttackCount;
 
-    public int TotalScore =>  previousTotalScore;
+    public int TotalScore => previousTotalScore;
+    
+    [SerializeField] private Transform castleRoot;
+    private PrefabSwitcherScript[] castleParts;
 
     private void Awake()
     {
@@ -45,6 +48,20 @@ public class AttackResultController : MonoBehaviour
         attackDamageAmounts = new int[attackCountController.MaxAttackCount];
         recordedAttackCount = 0;
         previousTotalScore = 0;
+
+        if (castleRoot == null)
+        {
+            Debug.LogError("CastleRootが設定されていません");
+            enabled = false;
+            return;
+        }
+        castleParts = castleRoot.GetComponentsInChildren<PrefabSwitcherScript>(true);
+        if (castleParts.Length == 0)
+        {
+            Debug.LogError("城のパーツが見つかりません");
+            enabled = false;
+            return;
+        }
     }
 
     public void RecordAttackResult()
@@ -61,8 +78,12 @@ public class AttackResultController : MonoBehaviour
             $"{currentAttackDamage}万円"
         );
 
-        if (recordedAttackCount >= attackDamageAmounts.Length)
+        bool usedAllAttacks = recordedAttackCount >= attackDamageAmounts.Length;
+
+        bool castleDestroyed = IsCastleDestroyed();
+        if (usedAllAttacks || castleDestroyed)
         {
+            attackCountController.FinishGame();
             resultUI.ShowResults();
         }
     }
@@ -75,5 +96,14 @@ public class AttackResultController : MonoBehaviour
         )
         { return 0; }
         return attackDamageAmounts[attackIndex];
+    }
+
+    private bool IsCastleDestroyed()
+    {
+        foreach (PrefabSwitcherScript castlePart in castleParts)
+        {
+            if (castlePart.currentHealth > 0f) { return false; }
+        }
+        return true;
     }
 }

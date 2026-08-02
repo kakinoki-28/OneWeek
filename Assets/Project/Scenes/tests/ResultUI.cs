@@ -193,6 +193,13 @@ public class ResultUI : MonoBehaviour
                 Debug.LogError($"{i + 1}回目のTMP_Textが見つかりません");
                 continue;
             }
+            if (i >= attackResultController.RecordedAttackCount)
+            {
+                resultText.text =
+                    $"{i + 1}回目" +
+                    $"<pos=30%>未使用";
+                continue;
+            }
             int damage = attackResultController.GetAttackDamage(i);
             // resultText.text = $"{i + 1}回目{damage,6}万円";
             string paddedDamage = damage.ToString().PadLeft(5);
